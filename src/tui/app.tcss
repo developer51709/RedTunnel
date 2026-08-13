@@ -1,0 +1,331 @@
+/* ═══════════════════════════════════════════════════════════
+   RedTunnel  ·  app.tcss
+   Textual stylesheet for the full application
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Global ─────────────────────────────────────────────── */
+
+Screen {
+    background: $surface;
+}
+
+/* ── Header / Footer ──────────────────────────────────────  */
+
+Header {
+    background: $primary;
+    color: $text;
+    text-style: bold;
+}
+
+Footer {
+    background: $panel;
+    color: $text-muted;
+}
+
+/* ── Sidebar (nav menu) ─────────────────────────────────── */
+
+#sidebar {
+    width: 26;
+    background: $panel;
+    border-right: solid $primary-darken-2;
+    padding: 1 1;
+}
+
+#sidebar-title {
+    text-style: bold;
+    color: $primary;
+    padding: 0 1 1 1;
+    border-bottom: solid $primary-darken-2;
+    margin-bottom: 1;
+}
+
+.nav-item {
+    padding: 0 1;
+    color: $text-muted;
+    height: 3;
+    content-align: left middle;
+}
+
+.nav-item:hover {
+    background: $primary-darken-2;
+    color: $text;
+}
+
+.nav-item.--highlight {
+    background: $primary;
+    color: $text;
+    text-style: bold;
+}
+
+/* ── Content area ───────────────────────────────────────── */
+
+#content {
+    padding: 1 2;
+}
+
+/* ── Home screen ─────────────────────────────────────────── */
+
+#home-banner {
+    color: $primary;
+    text-style: bold;
+    padding: 0 0 1 0;
+}
+
+#home-subtitle {
+    color: $text-muted;
+    padding: 0 0 1 0;
+}
+
+#info-grid {
+    layout: grid;
+    grid-size: 2 2;
+    grid-gutter: 1;
+    height: auto;
+    margin-bottom: 1;
+}
+
+.info-box {
+    border: solid $primary-darken-2;
+    padding: 0 1;
+    height: 3;
+    content-align: left middle;
+}
+
+.info-label {
+    color: $text-muted;
+}
+
+.info-value {
+    color: $primary;
+    text-style: bold;
+}
+
+#menu-container {
+    layout: vertical;
+    height: auto;
+    margin-top: 1;
+}
+
+.menu-button {
+    margin: 0 0 1 0;
+    width: 100%;
+    background: $panel;
+    border: solid $primary-darken-2;
+    color: $text;
+    text-align: left;
+    padding: 0 2;
+    height: 3;
+}
+
+.menu-button:hover {
+    background: $primary-darken-2;
+    border: solid $primary;
+}
+
+.menu-button:focus {
+    background: $primary;
+    border: solid $primary-lighten-1;
+    color: $text;
+    text-style: bold;
+}
+
+/* ── Verification screen ──────────────────────────────────── */
+
+#verify-log {
+    height: 1fr;
+    border: solid $primary-darken-2;
+    padding: 0 1;
+}
+
+#verify-progress {
+    margin: 1 0;
+}
+
+#verify-results {
+    height: auto;
+    border: solid $success-darken-1;
+    padding: 1 2;
+    margin-top: 1;
+    display: none;
+}
+
+#verify-results.--visible {
+    display: block;
+}
+
+.result-row {
+    height: 3;
+    layout: horizontal;
+    content-align: left middle;
+}
+
+.result-label {
+    width: 20;
+    color: $text-muted;
+}
+
+.result-pass {
+    color: $success;
+    text-style: bold;
+}
+
+.result-fail {
+    color: $error;
+    text-style: bold;
+}
+
+/* ── Settings screen ─────────────────────────────────────── */
+
+#settings-form {
+    height: 1fr;
+}
+
+.setting-row {
+    height: 5;
+    border-bottom: dashed $panel-lighten-1;
+    padding: 0 1;
+    layout: horizontal;
+}
+
+.setting-label {
+    width: 24;
+    color: $text-muted;
+    content-align: left middle;
+    height: 5;
+}
+
+.setting-control {
+    width: 1fr;
+    content-align: left middle;
+    height: 5;
+}
+
+#settings-save {
+    margin-top: 1;
+    width: 24;
+    background: $success-darken-1;
+    border: solid $success;
+    color: $text;
+    text-style: bold;
+}
+
+#settings-save:hover {
+    background: $success;
+}
+
+/* ── Wizard screen ─────────────────────────────────────── */
+
+#wizard-container {
+    align: center middle;
+    height: 1fr;
+}
+
+#wizard-box {
+    width: 70;
+    height: auto;
+    border: double $primary;
+    padding: 2 4;
+    background: $panel;
+}
+
+#wizard-title {
+    text-style: bold;
+    color: $primary;
+    text-align: center;
+    padding-bottom: 1;
+    border-bottom: solid $primary-darken-2;
+    margin-bottom: 1;
+}
+
+#wizard-hint {
+    color: $text-muted;
+    margin-bottom: 1;
+}
+
+#wizard-input {
+    margin-bottom: 1;
+}
+
+#wizard-progress {
+    margin-bottom: 1;
+}
+
+#wizard-next {
+    width: 100%;
+    background: $primary;
+    border: solid $primary-lighten-1;
+    color: $text;
+    text-style: bold;
+}
+
+#wizard-skip {
+    width: 100%;
+    background: $panel;
+    border: solid $primary-darken-2;
+    color: $text-muted;
+    margin-top: 1;
+}
+
+/* ── Shared ──────────────────────────────────────────────── */
+
+.screen-title {
+    text-style: bold;
+    color: $primary;
+    padding-bottom: 1;
+    border-bottom: solid $primary-darken-2;
+    margin-bottom: 1;
+}
+
+.muted {
+    color: $text-muted;
+}
+
+.success {
+    color: $success;
+}
+
+.warning {
+    color: $warning;
+}
+
+.error {
+    color: $error;
+}
+
+.badge-success {
+    background: $success-darken-2;
+    color: $success;
+    text-style: bold;
+    padding: 0 1;
+}
+
+.badge-warning {
+    background: $warning-darken-2;
+    color: $warning;
+    text-style: bold;
+    padding: 0 1;
+}
+
+.badge-error {
+    background: $error-darken-2;
+    color: $error;
+    text-style: bold;
+    padding: 0 1;
+}
+
+.badge-info {
+    background: $accent-darken-2;
+    color: $accent;
+    text-style: bold;
+    padding: 0 1;
+}
+
+.back-hint {
+    color: $text-muted;
+    margin-top: 1;
+}
+
+Rule {
+    color: $primary-darken-2;
+    margin: 1 0;
+}
