@@ -10,7 +10,7 @@ import tty
 import termios
 from typing import Optional, Callable
 from .theme import get_theme
-from .icons import get_icon
+from .icons import get_icon_set
 
 
 class TUIRenderer:
@@ -24,7 +24,7 @@ class TUIRenderer:
         """
         self.title = title
         self.theme = get_theme()
-        self.icons = get_icon()
+        self.icons = get_icon_set()
         self.content = ""
         self.status_line = ""
         self.clear_screen = True

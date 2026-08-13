@@ -180,6 +180,24 @@ class Theme:
         """Style text with secondary color."""
         return self.style(text, "secondary")
     
+    def bold(self, text: str) -> str:
+        """Apply bold styling to text."""
+        if not self.use_color:
+            return text
+        return Style.bold(text)
+    
+    def dim(self, text: str) -> str:
+        """Apply dim styling to text."""
+        if not self.use_color:
+            return text
+        return Style.dim(text)
+    
+    def underline(self, text: str) -> str:
+        """Apply underline styling to text."""
+        if not self.use_color:
+            return text
+        return Style.underline(text)
+    
     def set_theme(self, theme_name: str) -> None:
         """Change the current theme."""
         self.theme_name = theme_name

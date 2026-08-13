@@ -5,7 +5,7 @@ with the icon and theme systems.
 """
 
 from typing import List, Optional, Callable, Any
-from .icons import get_icon
+from .icons import get_icon_set
 from .theme import get_theme
 
 
@@ -100,7 +100,7 @@ class Menu:
         self.allow_exit = allow_exit
         self.selected_index = 0
         self.theme = get_theme()
-        self.icons = get_icon()
+        self.icons = get_icon_set()
     
     def render(self) -> str:
         """Render the menu.
@@ -165,7 +165,7 @@ class StatusLine:
         self.center = center
         self.right = right
         self.theme = get_theme()
-        self.icons = get_icon()
+        self.icons = get_icon_set()
     
     def render(self, width: int = 80) -> str:
         """Render the status line.
@@ -293,7 +293,7 @@ class ConfirmationDialog:
         self.message = message
         self.default = default
         self.theme = get_theme()
-        self.icons = get_icon()
+        self.icons = get_icon_set()
     
     def render(self) -> str:
         """Render the confirmation dialog.

@@ -25,7 +25,7 @@ class PlatformInfo:
     
     def __init__(self):
         self._platform_type = self._detect_platform()
-        self._termux_detected = self._detect_termux()
+        self._termux_detected = self._detect_termux() or self._detect_proot_distro()
         self._nerdfont_available = self._detect_nerdfont()
         
     def _detect_platform(self) -> PlatformType:
@@ -36,6 +36,12 @@ class PlatformInfo:
         if self._detect_termux():
             return PlatformType.ANDROID_TERMUX
         
+        # Check for proot-distro (Linux distro running in Termux)
+        if self._detect_proot_distro():
+            # proot-distro is essentially a Linux environment but with Termux constraints
+            # We treat it as a special case that inherits Termux optimizations
+            return PlatformType.ANDROID_TERMUX
+        
         if system == "linux":
             return PlatformType.LINUX
         elif system == "darwin":
@@ -44,7 +50,7 @@ class PlatformInfo:
             return PlatformType.WINDOWS
         else:
             # If we detected Termux but system is unknown, still return Termux
-            if self._detect_termux():
+            if self._detect_termux() or self._detect_proot_distro():
                 return PlatformType.ANDROID_TERMUX
             return PlatformType.UNKNOWN
     
@@ -55,6 +61,15 @@ class PlatformInfo:
             "TERMUX_VERSION" in os.environ or
             "TERMUX_APP__PACKAGE_NAME" in os.environ or
             os.path.exists("/data/data/com.termux")
+        )
+    
+    def _detect_proot_distro(self) -> bool:
+        """Detect if running under proot-distro (Linux distro in Termux)."""
+        # proot-distro sets specific environment variables and file paths
+        return (
+            "PROOT_DISTRO_ROOTFS" in os.environ or
+            "PROOT_DISTRO_DISTRIBUTION" in os.environ or
+            os.path.exists("/data/data/com.termux/files/usr/var/lib/proot-distro")
         )
     
     def _detect_nerdfont(self) -> bool:
@@ -75,6 +90,11 @@ class PlatformInfo:
     def is_termux(self) -> bool:
         """Check if running under Termux."""
         return self._termux_detected
+    
+    @property
+    def is_proot_distro(self) -> bool:
+        """Check if running under proot-distro."""
+        return self._detect_proot_distro()
     
     @property
     def is_android(self) -> bool:
@@ -99,12 +119,36 @@ class PlatformInfo:
     @property
     def supports_color(self) -> bool:
         """Check if terminal supports color."""
+        # Check for proot-distro environments first (they inherit Termux capabilities)
+        if self._detect_proot_distro():
+            # proot-distro environments generally support color
+            return True
+        
         # Check if we're in a terminal that supports color
         if sys.stdout.isatty():
             # Check TERM environment variable
             term = os.environ.get("TERM", "")
             if term and term != "dumb":
                 return True
+        else:
+            # Fallback: check TERM variable even if not a tty
+            # This handles cases where commands are run through shells
+            term = os.environ.get("TERM", "")
+            color_terms = [
+                "xterm", "xterm-256color", "xterm-color", 
+                "screen", "screen-256color",
+                "tmux", "tmux-256color",
+                "linux", "vt100", "vt220",
+                "ansi", "cygwin", "putty"
+            ]
+            if any(term.startswith(ct) for ct in color_terms):
+                return True
+            
+            # Check COLORTERM variable
+            colorterm = os.environ.get("COLORTERM", "")
+            if colorterm:
+                return True
+        
         return False
     
     @property
@@ -118,6 +162,10 @@ class PlatformInfo:
     def get_platform_name(self) -> str:
         """Get human-readable platform name."""
         if self._platform_type == PlatformType.ANDROID_TERMUX:
+            if self._detect_proot_distro():
+                # Get the proot-distro distribution name if available
+                distro = os.environ.get("PROOT_DISTRO_DISTRIBUTION", "Linux")
+                return f"Android (Termux proot-distro: {distro})"
             return "Android (Termux)"
         elif self._platform_type == PlatformType.LINUX:
             return "Linux"
@@ -138,7 +186,15 @@ class PlatformInfo:
         }
         
         # Platform-specific recommendations
-        if self._termux_detected:
+        if self._detect_proot_distro():
+            # proot-distro has more resources than pure Termux
+            config.update({
+                "max_workers": 4,  # More workers available in proot-distro
+                "cache_enabled": True,  # Still beneficial to cache
+                "log_level": "INFO",  # Reasonable verbosity
+            })
+        elif self._termux_detected:
+            # Pure Termux has limited resources
             config.update({
                 "max_workers": 2,  # Limited resources on mobile
                 "cache_enabled": True,  # Reduce network calls
