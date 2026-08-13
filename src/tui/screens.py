@@ -171,10 +171,6 @@ class VerifyScreen(Screen):
         Binding("r",      "run",  "Re-run", show=True),
     ]
 
-    # reactive flags
-    _running: reactive[bool]  = reactive(False)
-    _done:    reactive[bool]  = reactive(False)
-
     def compose(self) -> ComposeResult:
         yield Header(show_clock=True)
         with ScrollableContainer(id="content"):
@@ -190,30 +186,32 @@ class VerifyScreen(Screen):
         yield Footer()
 
     def on_mount(self) -> None:
+        # Store widget references on the main thread so the worker can use them safely.
+        self._log_widget  = self.query_one("#verify-log",      Log)
+        self._prog_widget = self.query_one("#verify-progress", ProgressBar)
+        self._results_widget = self.query_one("#verify-results")
         self._start_verification()
 
     def action_back(self) -> None:
         self.app.pop_screen()
 
     def action_run(self) -> None:
-        log = self.query_one("#verify-log", Log)
-        log.clear()
-        results = self.query_one("#verify-results")
-        results.remove_class("--visible")
+        self._log_widget.clear()
+        self._results_widget.remove_class("--visible")
         self._start_verification()
 
     @work(exclusive=True, thread=True)
     def _start_verification(self) -> None:
         """Run verification in a worker thread so the UI stays responsive."""
         import time
-        log: Log = self.app.query_one("#verify-log", Log)  # type: ignore[arg-type]
-        prog: ProgressBar = self.app.query_one("#verify-progress", ProgressBar)  # type: ignore[arg-type]
+        log  = self._log_widget
+        prog = self._prog_widget
 
         def _log(msg: str) -> None:
-            self.call_from_thread(log.write_line, msg)
+            self.app.call_from_thread(log.write_line, msg)
 
         def _progress(pct: int) -> None:
-            self.call_from_thread(prog.update, progress=pct)
+            self.app.call_from_thread(prog.update, progress=pct)
 
         try:
             _log("Connecting to Cloudflare API…")
@@ -253,7 +251,7 @@ class VerifyScreen(Screen):
             _progress(100)
             _log("Done.")
 
-            self.call_from_thread(
+            self.app.call_from_thread(
                 self._show_results, acct_ok, zone_ok, acct_info, zone_info
             )
 
@@ -266,8 +264,7 @@ class VerifyScreen(Screen):
 
     def _show_results(self, acct_ok: bool, zone_ok: bool,
                       acct_info: dict | None, zone_info: dict | None) -> None:
-        results = self.query_one("#verify-results")
-        results.add_class("--visible")
+        self._results_widget.add_class("--visible")
 
         def _tick(ok: bool) -> str:
             return _badge("PASS", "success") if ok else _badge("FAIL", "error")
