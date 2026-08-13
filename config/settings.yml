@@ -1,0 +1,15 @@
+# RedTunnel Global Settings
+
+cloudflare:
+  api_token: "YOUR_API_TOKEN_HERE"
+  account_id: "YOUR_ACCOUNT_ID"
+  zone_id: "YOUR_ZONE_ID"
+
+simulation:
+  max_requests_per_second: 10
+  max_duration_seconds: 60
+  safe_mode: true
+
+logging:
+  level: "INFO"
+  file: "logs/redtunnel.log"
