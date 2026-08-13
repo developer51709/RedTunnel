@@ -28,3 +28,4 @@ Thumbs.db
 # Config secrets
 config/*.secret.yml
 config/*.local.yml
+config/settings.yml

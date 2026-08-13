@@ -2,3 +2,5 @@ requests
 pyyaml
 rich
 pytest
+nerdfont
+textual

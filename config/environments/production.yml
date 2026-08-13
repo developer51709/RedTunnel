@@ -1,0 +1,15 @@
+# Production environment configuration
+environment: production
+debug: false
+log_level: WARNING
+
+simulation:
+  max_requests: 1000
+  timeout: 120
+  delay_between_requests: 2.0
+
+ui:
+  use_nerdfont: true
+  use_color: true
+  use_unicode: true
+  theme: default

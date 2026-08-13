@@ -1,5 +1,5 @@
-# RedTunnel Configuration File
-# Copy this file to config/settings.yml and fill in your credentials
+# RedTunnel Configuration Example
+# Copy this file to settings.yml and fill in your actual credentials
 
 # Environment: development, staging, production, testing
 environment: development
@@ -14,15 +14,15 @@ log_level: DEBUG
 cloudflare:
   # Your Cloudflare API token
   # Create at: https://dash.cloudflare.com/profile/api-tokens
-  api_token: ""
+  api_token: "your_api_token_here"
   
   # Your Cloudflare Account ID
   # Found in Cloudflare Dashboard > Overview
-  account_id: ""
+  account_id: "your_account_id_here"
   
   # Your Cloudflare Zone ID
   # Found in Cloudflare Dashboard > Select Zone > Overview
-  zone_id: ""
+  zone_id: "your_zone_id_here"
 
 # Simulation Settings
 simulation:

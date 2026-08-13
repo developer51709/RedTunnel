@@ -1,0 +1,15 @@
+# Staging environment configuration
+environment: staging
+debug: true
+log_level: INFO
+
+simulation:
+  max_requests: 200
+  timeout: 60
+  delay_between_requests: 1.0
+
+ui:
+  use_nerdfont: true
+  use_color: true
+  use_unicode: true
+  theme: default
